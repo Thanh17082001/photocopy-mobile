@@ -23,6 +23,7 @@ class AuthManager with ChangeNotifier {
   Future<void> login(String email, String password) async {
     final response = await _authService.login(email, password);
     setAuthModel(response);
+    notifyListeners();
   }
 
   Future<bool> register(String email, String password, String fullName,

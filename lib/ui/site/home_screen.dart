@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:photocopy/ui/site/home_brand.dart';
+import 'package:photocopy/ui/site/home_product.dart';
+import 'package:photocopy/ui/site/home_search.dart';
+import '../site/home_banner.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -10,6 +14,14 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return ListView(
+      scrollDirection: Axis.vertical,
+      children: const <Widget>[
+        HomeSearch(),
+        // HomeBanner(),
+        HomeBrand(),
+        HomeProduct()
+      ],
+    );
   }
 }
