@@ -1,5 +1,3 @@
-
-
 class AccessoryModel {
   final String? id;
   final String? brandId;
@@ -12,46 +10,48 @@ class AccessoryModel {
   final int? rentalQuantity;
   final int? priceSale;
   final int? priceRental;
+  final String typeProduct;
 // hàm xây dưng
-  AccessoryModel({
-    this.id,
-    this.name,
-    this.description,
-    this.image,
-    this.soldQuantity,
-    this.inputQuantity,
-    this.rentalQuantity,
-    this.priceSale,
-    this.priceRental,
-    this.brandId,
-    this.typeId,
-  });
+  AccessoryModel(
+      {this.id,
+      this.name,
+      this.description,
+      this.image,
+      this.soldQuantity,
+      this.inputQuantity,
+      this.rentalQuantity,
+      this.priceSale,
+      this.priceRental,
+      this.brandId,
+      this.typeId,
+      this.typeProduct = 'accessory',});
 
-  AccessoryModel copyWith({
-    String? id,
-    String? brandId,
-    String? typeId,
-    String? categoryId,
-    String? name,
-    String? description,
-    int? soldQuantity,
-    int? rentalQuantity,
-    int? priceSale,
-    int? priceRental,
-    String? image,
-  }) {
+  AccessoryModel copyWith(
+      {String? id,
+      String? brandId,
+      String? typeId,
+      String? categoryId,
+      String? name,
+      String? description,
+      int? soldQuantity,
+      int? rentalQuantity,
+      int? priceSale,
+      int? priceRental,
+      String? image,
+      String? typeProduct}) {
     return AccessoryModel(
-      id: id ?? this.id,
-      brandId: brandId ?? this.brandId,
-      typeId: typeId ?? this.typeId,
-      name: name ?? this.name,
-      description: description ?? this.description,
-      priceSale: priceSale ?? this.priceSale,
-      priceRental: priceRental ?? this.priceRental,
-      soldQuantity: soldQuantity ?? this.soldQuantity,
-      rentalQuantity: rentalQuantity ?? this.rentalQuantity,
-      image: image ?? this.image,
-    );
+        id: id ?? this.id,
+        brandId: brandId ?? this.brandId,
+        typeId: typeId ?? this.typeId,
+        name: name ?? this.name,
+        description: description ?? this.description,
+        priceSale: priceSale ?? this.priceSale,
+        priceRental: priceRental ?? this.priceRental,
+        soldQuantity: soldQuantity ?? this.soldQuantity,
+        rentalQuantity: rentalQuantity ?? this.rentalQuantity,
+        image: image ?? this.image,
+        typeProduct: typeProduct ?? 'accessory'
+        );
   }
 
   // chuyển từ json sang ob dart
@@ -68,6 +68,7 @@ class AccessoryModel {
       inputQuantity: json['inputQuantity'],
       rentalQuantity: json['rentalQuantity'],
       image: json['image'],
+      typeProduct:'accessory'
     );
   }
 

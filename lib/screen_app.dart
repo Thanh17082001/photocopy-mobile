@@ -3,11 +3,13 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:photocopy/ui/auth/auth_manager.dart';
 import 'package:photocopy/ui/auth/auth_screen.dart';
+import 'package:photocopy/ui/cart/cart_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import './model/auth_model.dart';
 import 'package:photocopy/ui/site/home_screen.dart';
 
+import 'ui/cart/cart_icon.dart';
 
 class ScreenApp extends StatefulWidget {
   const ScreenApp({super.key});
@@ -21,7 +23,7 @@ class _ScreenAppState extends State<ScreenApp> {
   bool? isLogin;
   // ignore: prefer_typing_uninitialized_variables
   AuthModel? user;
-  List <Widget> pages = [const HomeScreen()];
+  List<Widget> pages = [const HomeScreen()];
 
   Future<AuthModel?> getUser() async {
     final prefs = await SharedPreferences.getInstance();
@@ -55,7 +57,7 @@ class _ScreenAppState extends State<ScreenApp> {
             }
           },
         ),
-        actions: [logout()],
+        actions: [cartButton(),const SizedBox(width: 8,), logout()],
       ),
       bottomNavigationBar: navBotomBar(),
       body: pages[selectedIndex],
@@ -101,10 +103,10 @@ class _ScreenAppState extends State<ScreenApp> {
   Widget logout() {
     return IconButton(
         onPressed: () {
-          Navigator.of(context).pushNamedAndRemoveUntil(
-            AuthScreen.routerName,
-            (route) => false,
-          );
+          // Navigator.of(context).pushNamedAndRemoveUntil(
+          //   AuthScreen.routerName,
+          //   (route) => false,
+          // );
           context.read<AuthManager>().logout();
         },
         icon: const Icon(Icons.logout));
@@ -123,5 +125,15 @@ class _ScreenAppState extends State<ScreenApp> {
         Text(user.fullName),
       ],
     );
+  }
+
+  Widget cartButton() {
+    context.read<CartManager>().getCartByUserId();
+    return Consumer<CartManager>(builder: (context, cartManager, index) {
+      return CartIcon(
+        count: cartManager.productCount,
+        child: const Icon(Icons.shopping_cart, size: 35,),
+      );
+    });
   }
 }

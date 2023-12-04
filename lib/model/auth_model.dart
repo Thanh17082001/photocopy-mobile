@@ -6,10 +6,16 @@ class AuthModel {
   final String? fullName;
   final String? phoneNumber;
 
-  AuthModel({this.id, this.email, this.password, this.avatar, this.fullName,this.phoneNumber});
+  AuthModel(
+      {this.id,
+      this.email,
+      this.password,
+      this.avatar,
+      this.fullName,
+      this.phoneNumber});
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
+      '_id': id,
       'email': email,
       'fullName': fullName,
       'password': password,

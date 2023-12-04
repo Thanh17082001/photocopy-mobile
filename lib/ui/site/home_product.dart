@@ -1,8 +1,18 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'dart:convert';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:photocopy/model/product_model.dart';
+import 'package:photocopy/ui/cart/cart_manager.dart';
 import 'package:photocopy/ui/product/accessory_manager.dart';
 import 'package:photocopy/ui/product/product_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../model/auth_model.dart';
 
 class HomeProduct extends StatefulWidget {
   const HomeProduct({super.key});
@@ -24,103 +34,90 @@ class _HomeProductState extends State<HomeProduct> {
 
   @override
   Widget build(BuildContext context) {
-    final productManager =  ProductManager();
-    final accessoryManager =  AccessoryManager();
-    return Expanded(
-      child: Column(
-        children: [
-          Container(
-              alignment: Alignment.centerLeft,
-              padding: const EdgeInsets.only(bottom: 10, left: 10, right: 10),
-              height: 60,
-              width: double.infinity,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: 250.0,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        TextButton(
-                          onPressed: () async {
-                            setState(() {
-                              typeProduct = 'product';
-                            });
-                            await getAllProduct(context);
-                          },
-                          child: Text(
-                            'Máy',
-                            style: TextStyle(
-                                color: typeProduct == 'product'
-                                    ? Colors.red
-                                    : Colors.black,
-                                fontSize: 20.0,
-                                fontWeight: FontWeight.w700),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        const Text(
-                          '|',
+    final productManager = ProductManager();
+    final accessoryManager = AccessoryManager();
+    return Column(
+      children: [
+        Container(
+            alignment: Alignment.centerLeft,
+            padding: const EdgeInsets.only(bottom: 10, left: 10, right: 10),
+            height: 60,
+            width: double.infinity,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 250.0,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      TextButton(
+                        onPressed: () async {
+                          setState(() {
+                            typeProduct = 'product';
+                          });
+                          await getAllProduct(context);
+                        },
+                        child: Text(
+                          'Máy',
                           style: TextStyle(
-                              color: Color.fromARGB(255, 255, 27, 27),
+                              color: typeProduct == 'product'
+                                  ? Colors.red
+                                  : Colors.black,
                               fontSize: 20.0,
                               fontWeight: FontWeight.w700),
                           textAlign: TextAlign.center,
                         ),
-                        TextButton(
-                          onPressed: () async {
-                            setState(() {
-                              typeProduct = 'accessory';
-                            });
-                            await getAllProduct(context);
-                          },
-                          child: Text(
-                            'Phụ kiện',
-                            style: TextStyle(
-                                color: typeProduct == 'accessory'
-                                    ? Colors.red
-                                    : Colors.black,
-                                fontSize: 20.0,
-                                fontWeight: FontWeight.w700),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  GestureDetector(
-                      onTap: () {
-                        print('aaaa');
-                      },
-                      child: const Text(
-                        "Xem Thêm",
+                      ),
+                      const Text(
+                        '|',
                         style: TextStyle(
-                          color: Colors.blue,
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.w400,
-                          fontStyle: FontStyle.italic,
+                            color: Color.fromARGB(255, 255, 27, 27),
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.w700),
+                        textAlign: TextAlign.center,
+                      ),
+                      TextButton(
+                        onPressed: () async {
+                          setState(() {
+                            typeProduct = 'accessory';
+                          });
+                          await getAllProduct(context);
+                        },
+                        child: Text(
+                          'Phụ kiện',
+                          style: TextStyle(
+                              color: typeProduct == 'accessory'
+                                  ? Colors.red
+                                  : Colors.black,
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.w700),
+                          textAlign: TextAlign.center,
                         ),
-                      ))
-                ],
-              )),
-          SizedBox(
-            height: 400,
-            child: FutureBuilder(
-                future: getAllProduct(context),
-                builder: ((context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                  return typeProduct =='product' ? homepageGirdView(productManager) : homepageGirdView2(accessoryManager);
-                })),
-          )
-        ],
-      ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            )),
+        SizedBox(
+          height: 400,
+          child: FutureBuilder(
+              future: getAllProduct(context),
+              builder: ((context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                return typeProduct == 'product'
+                    ? homepageGirdView(productManager)
+                    : homepageGirdView2(accessoryManager);
+              })),
+        )
+      ],
     );
   }
 
@@ -151,7 +148,7 @@ class _HomeProductState extends State<HomeProduct> {
     });
   }
 
-   Widget homepageGirdView2(AccessoryManager productManager) {
+  Widget homepageGirdView2(AccessoryManager productManager) {
     return Consumer<AccessoryManager>(builder: (ctx, productManager, child) {
       if (productManager.itemAcount == 0) {
         return const Center(child: Text("Không có sản phẩm"));
@@ -229,7 +226,10 @@ class _HomeProductState extends State<HomeProduct> {
                     ),
                     IconButton(
                         onPressed: () {
-                          print('aaa');
+                          showDialog(
+                              context: context,
+                              builder: ((context) =>
+                                  ShowDialog(product: product)));
                         },
                         icon: const Icon(
                           Icons.shopping_cart,
@@ -248,7 +248,171 @@ class _HomeProductState extends State<HomeProduct> {
   // ignore: non_constant_identifier_names
   String curency(price) {
     final NumberFormat currencyFormatter =
-        NumberFormat.currency(locale: 'vi_VN', symbol: 'vnd');
+        NumberFormat.currency(locale: 'vi_VN', symbol: 'VNĐ');
+    return currencyFormatter.format(price);
+  }
+}
+
+class ShowDialog extends StatefulWidget {
+  final product;
+  const ShowDialog({Key? key, required this.product}) : super(key: key);
+
+  @override
+  State<ShowDialog> createState() => _ShowDialogState();
+}
+
+class _ShowDialogState extends State<ShowDialog> {
+  int quantity = 1;
+  String validQuantity = '';
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      actions: [
+        ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white, backgroundColor: Colors.red),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text("Hủy bỏ")),
+        ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white, backgroundColor: Colors.green),
+            onPressed: () async {
+              final prefs = await SharedPreferences.getInstance();
+              var initUser = prefs.getString('user');
+              if (initUser != null) {
+                var user = AuthModel.fromJson(jsonDecode(initUser));
+                var item = <String, dynamic>{};
+                item['id'] = widget.product.id;
+                item['typeProduct'] = widget.product?.typeProduct;
+                item['quantityCart'] = quantity;
+                if (user.id!.isEmpty) {
+                  SnackBar(
+                    content: const Text(
+                        "Bạn hết thời gian đăng nhập vui lòng đăng nhập lại"),
+                    action: SnackBarAction(
+                      onPressed: () => print('aaaa'),
+                      label: 'Đăng nhập',
+                    ),
+                  );
+                } else {
+                  // ignore: use_build_context_synchronously
+                  var a =
+                      await context.read<CartManager>().addCart(user.id, item);
+                  if (a) {
+                    Navigator.of(context).pop();
+                    ScaffoldMessenger.of(context)
+                      ..hideCurrentSnackBar()
+                      ..showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                            'Đã thêm vào giỏ hàng',
+                          ),
+                          duration: Duration(seconds: 2),
+                        ),
+                      );
+                  } else {
+                    ScaffoldMessenger.of(context)
+                      ..hideCurrentSnackBar()
+                      ..showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                            'Thêm không thành công thử lại',
+                          ),
+                          duration: Duration(seconds: 2),
+                        ),
+                      );
+                  }
+                }
+              }
+              // Navigator.of(context).pop();
+            },
+            child: const Text("Thêm vào giỏ hàng"))
+      ],
+      title: Text(widget.product.name.toString()),
+      content: SizedBox(
+        height: 150.0,
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              SizedBox(
+                height: 30,
+                child: Text('Giá bán: ${curency(widget.product.priceSale)}'),
+              ),
+              if (widget.product.priceRental != null)
+                SizedBox(
+                  height: 30,
+                  child:
+                      Text('Giá thuê: ${curency(widget.product.priceRental)}'),
+                ),
+              const SizedBox(
+                height: 20.0,
+                child: Text(
+                  'Điều chỉnh số lượng',
+                  textAlign: TextAlign.start,
+                ),
+              ),
+              SizedBox(
+                height: 40,
+                child: Row(
+                  children: [
+                    IconButton(
+                        iconSize: 20,
+                        onPressed: () {
+                          setState(() {
+                            if (quantity > 1) {
+                              quantity--;
+                              validQuantity = "";
+                            } else {
+                              quantity--;
+                              validQuantity = "Số lượng Phải lơn hơn không";
+                            }
+                          });
+                        },
+                        icon: const Icon(Icons.remove)),
+                    const SizedBox(
+                      width: 20,
+                    ),
+                    Text(
+                      quantity.toString(),
+                      style: const TextStyle(fontSize: 20.0),
+                    ),
+                    const SizedBox(
+                      width: 20,
+                    ),
+                    IconButton(
+                        iconSize: 20,
+                        onPressed: () {
+                          setState(() {
+                            if (quantity <
+                                widget.product.inputQuantity!.toInt()) {
+                              quantity++;
+                              validQuantity = "";
+                            } else {
+                              quantity++;
+                              validQuantity = "Số lượng trong kho không đủ";
+                            }
+                          });
+                        },
+                        icon: const Icon(Icons.add)),
+                  ],
+                ),
+              ),
+              if (validQuantity.isNotEmpty)
+                Text(
+                  validQuantity,
+                  style: const TextStyle(color: Colors.red, fontSize: 15),
+                )
+            ]),
+      ),
+    );
+  }
+
+  String curency(price) {
+    final NumberFormat currencyFormatter =
+        NumberFormat.currency(locale: 'vi_VN', symbol: 'VNĐ');
     return currencyFormatter.format(price);
   }
 }

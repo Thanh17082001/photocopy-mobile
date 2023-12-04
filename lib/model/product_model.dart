@@ -1,5 +1,3 @@
-
-
 class ProductModel {
   final String? id;
   final String? brandId;
@@ -14,6 +12,7 @@ class ProductModel {
   final int? priceSale;
   final int? priceRental;
   final int? warrantyTime;
+  final String typeProduct;
 // hàm xây dưng
   ProductModel({
     this.id,
@@ -28,6 +27,7 @@ class ProductModel {
     this.warrantyTime,
     this.brandId,
     this.typeId,
+    this.typeProduct='product',
     required this.categoryId,
   });
 
@@ -44,6 +44,7 @@ class ProductModel {
     int? priceRental,
     int? warrantyTime,
     String? image,
+    String? typeProduct,
   }) {
     return ProductModel(
       id: id ?? this.id,
@@ -58,6 +59,7 @@ class ProductModel {
       soldQuantity: soldQuantity ?? this.soldQuantity,
       rentalQuantity: rentalQuantity ?? this.rentalQuantity,
       image: image ?? this.image,
+      typeProduct: typeProduct ?? 'product'
     );
   }
 
@@ -77,6 +79,7 @@ class ProductModel {
       inputQuantity: json['inputQuantity'],
       rentalQuantity: json['rentalQuantity'],
       image: json['image'],
+      typeProduct: 'product'
     );
   }
 

@@ -35,8 +35,6 @@ class AccessoryService {
           "http://$ipDevice:3000/accessory/filter/?field=brandId&type=$brandId");
       final response = await http.get(url);
       final result = json.decode(response.body);
-      
-      print(result);
       if (response.statusCode != 200) {
         return [];
       } else {

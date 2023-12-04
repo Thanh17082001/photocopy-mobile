@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:photocopy/ui/auth/auth_manager.dart';
+import 'package:photocopy/ui/cart/cart_manager.dart';
 import 'package:photocopy/ui/product/accessory_manager.dart';
 import 'package:photocopy/ui/product/brand_manager.dart';
 import 'package:photocopy/ui/product/product_manager.dart';
@@ -21,6 +22,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (ctx) => ProductManager()),
         ChangeNotifierProvider(create: (ctx) => AccessoryManager()),
         ChangeNotifierProvider(create: (ctx) => BrandManager()),
+        ChangeNotifierProvider(create: (ctx) => CartManager()),
         ],
       child: Consumer<AuthManager>(builder: (ctx, authMangager, child) {
         return MaterialApp(
