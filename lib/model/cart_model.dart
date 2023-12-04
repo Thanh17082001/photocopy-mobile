@@ -5,9 +5,15 @@ class CartModel {
 
   CartModel({this.id, this.userId, this.products});
 
-  static CartModel fromJson(Map<String, dynamic> json) {
+  static CartModel? fromJson(json) {
+    if (json!=null) {
     return CartModel(
-        id: json['_id'], userId: json['userId'], products: json['products']);
+      id: json['_id'],
+      userId: json['userId'],
+      products: json['products'],
+    );
+  }
+    return null; 
   }
 
   Map<String, dynamic> toJson() {

@@ -297,32 +297,35 @@ class _ShowDialogState extends State<ShowDialog> {
                     ),
                   );
                 } else {
-                  // ignore: use_build_context_synchronously
-                  var a =
-                      await context.read<CartManager>().addCart(user.id, item);
-                  if (a) {
-                    Navigator.of(context).pop();
-                    ScaffoldMessenger.of(context)
-                      ..hideCurrentSnackBar()
-                      ..showSnackBar(
-                        const SnackBar(
-                          content: Text(
-                            'Đã thêm vào giỏ hàng',
+                  if (validQuantity.isEmpty) {
+                    // ignore: use_build_context_synchronously
+                    var a = await context
+                        .read<CartManager>()
+                        .addCart(user.id, item);
+                    if (a) {
+                      Navigator.of(context).pop();
+                      ScaffoldMessenger.of(context)
+                        ..hideCurrentSnackBar()
+                        ..showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                              'Đã thêm vào giỏ hàng',
+                            ),
+                            duration: Duration(seconds: 2),
                           ),
-                          duration: Duration(seconds: 2),
-                        ),
-                      );
-                  } else {
-                    ScaffoldMessenger.of(context)
-                      ..hideCurrentSnackBar()
-                      ..showSnackBar(
-                        const SnackBar(
-                          content: Text(
-                            'Thêm không thành công thử lại',
+                        );
+                    } else {
+                      ScaffoldMessenger.of(context)
+                        ..hideCurrentSnackBar()
+                        ..showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                              'Thêm không thành công thử lại',
+                            ),
+                            duration: Duration(seconds: 2),
                           ),
-                          duration: Duration(seconds: 2),
-                        ),
-                      );
+                        );
+                    }
                   }
                 }
               }

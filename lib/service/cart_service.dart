@@ -14,9 +14,13 @@ class CartService {
       if (response.statusCode != 200) {
         return null;
       } else {
-        cart = CartModel.fromJson(result);
+        if (result != null) {
+          cart = CartModel.fromJson(result)!;
+          return cart;
+        } else {
+          return null;
+        }
       }
-      return cart;
     } catch (e) {
       print(e);
       return null;
