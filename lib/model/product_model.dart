@@ -11,6 +11,7 @@ class ProductModel {
   final int? rentalQuantity;
   final int? priceSale;
   final int? priceRental;
+  final int? priceImport;
   final int? warrantyTime;
   final String typeProduct;
 // hàm xây dưng
@@ -24,6 +25,7 @@ class ProductModel {
     this.rentalQuantity,
     this.priceSale,
     this.priceRental,
+    this.priceImport,
     this.warrantyTime,
     this.brandId,
     this.typeId,
@@ -74,6 +76,7 @@ class ProductModel {
       description: json['description'],
       priceSale: json['priceSale'],
       priceRental: json['priceRental'],
+      priceImport: json['priceImport'],
       warrantyTime: json['warrantyTime'],
       soldQuantity: json['soldQuantity'],
       inputQuantity: json['inputQuantity'],

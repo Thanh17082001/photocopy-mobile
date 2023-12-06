@@ -109,14 +109,6 @@ class CartManager with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<ProductModel> productGet(item) async {
-    return await productManager.findById(item['id']);
-  }
-
-  Future<AccessoryModel> accessoryGet(item) async {
-    return accessoryManager.findById(item['id']);
-  }
-
   int totalProduct() {
     int total = 0;
     // ignore: avoid_function_literals_in_foreach_calls
@@ -134,5 +126,15 @@ class CartManager with ChangeNotifier {
       }
     });
     return total;
+  }
+
+  Future<void> clear() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    var initUser = prefs.getString('user');
+    var user = AuthModel.fromJson(jsonDecode(initUser!));
+    _items.products = [];
+    await cartService.updateQuantity(user.id, []);
+    notifyListeners();
   }
 }

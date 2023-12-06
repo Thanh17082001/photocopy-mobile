@@ -1,12 +1,9 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:photocopy/model/product_model.dart';
 import 'package:photocopy/ui/cart/cart_manager.dart';
 import 'package:photocopy/ui/product/accessory_manager.dart';
+import 'package:photocopy/ui/product/product_detail_screen.dart';
 import 'package:photocopy/ui/product/product_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -140,8 +137,8 @@ class _HomeProductState extends State<HomeProduct> {
                 decoration: BoxDecoration(
                     border: Border.all(color: Colors.black54),
                     borderRadius: BorderRadius.circular(8.0)),
-                child:
-                    homepageGirdTite(productManager.products[index], context),
+                child: homepageGirdTite(
+                    productManager.products[index], context, index),
               );
             });
       }
@@ -167,81 +164,88 @@ class _HomeProductState extends State<HomeProduct> {
                 decoration: BoxDecoration(
                     border: Border.all(color: Colors.black54),
                     borderRadius: BorderRadius.circular(8.0)),
-                child:
-                    homepageGirdTite(productManager.products[index], context),
+                child: homepageGirdTite(
+                    productManager.products[index], context, index),
               );
             });
       }
     });
   }
 
-  Widget homepageGirdTite(product, context) {
-    return Column(
-      children: [
-        Image.network(
-          'http://10.0.2.2:3000/${product.image}',
-          height: 165.0,
-          fit: BoxFit.cover,
-        ),
-        Expanded(
-          child: Container(
-            padding: const EdgeInsets.all(8),
-            height: 90.0,
-            decoration: const BoxDecoration(
-                color: Color(0xFF0E8388),
-                borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(8.0),
-                    bottomRight: Radius.circular(8.0))),
-            width: double.maxFinite,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Text(
-                  product.name,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                  style: const TextStyle(color: Colors.black, fontSize: 18.0),
-                  textAlign: TextAlign.left,
-                ),
-                const SizedBox(
-                  height: 5.0,
-                ),
-                Text(
-                  product.description,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                  style: const TextStyle(
-                      fontSize: 12.0,
-                      color: Color.fromARGB(255, 214, 214, 214)),
-                ),
-                Expanded(
-                    child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      curency(product.priceSale),
-                      style: const TextStyle(
-                          color: Color.fromARGB(255, 255, 255, 255)),
-                    ),
-                    IconButton(
-                        onPressed: () {
-                          showDialog(
-                              context: context,
-                              builder: ((context) =>
-                                  ShowDialog(product: product)));
-                        },
-                        icon: const Icon(
-                          Icons.shopping_cart,
-                          color: Colors.white,
-                        ))
-                  ],
-                ))
-              ],
+  Widget homepageGirdTite(product, context, index) {
+    return GestureDetector(
+      onTap: () async {
+        var a = {'id': product.id, 'typeProduct': typeProduct};
+        await Navigator.of(context).pushNamed(ProductDetai.routerName,
+            arguments: a);
+      },
+      child: Column(
+        children: [
+          Image.network(
+            'http://10.0.2.2:3000/${product.image}',
+            height: 165.0,
+            fit: BoxFit.cover,
+          ),
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.all(8),
+              height: 90.0,
+              decoration: const BoxDecoration(
+                  color: Color(0xFF0E8388),
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(8.0),
+                      bottomRight: Radius.circular(8.0))),
+              width: double.maxFinite,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Text(
+                    product.name,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    style: const TextStyle(color: Colors.black, fontSize: 18.0),
+                    textAlign: TextAlign.left,
+                  ),
+                  const SizedBox(
+                    height: 5.0,
+                  ),
+                  Text(
+                    product.description,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    style: const TextStyle(
+                        fontSize: 12.0,
+                        color: Color.fromARGB(255, 214, 214, 214)),
+                  ),
+                  Expanded(
+                      child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        curency(product.priceSale),
+                        style: const TextStyle(
+                            color: Color.fromARGB(255, 255, 255, 255)),
+                      ),
+                      IconButton(
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: ((context) =>
+                                    ShowDialogClass(product: product)));
+                          },
+                          icon: const Icon(
+                            Icons.shopping_cart,
+                            color: Colors.white,
+                          ))
+                    ],
+                  ))
+                ],
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -253,15 +257,15 @@ class _HomeProductState extends State<HomeProduct> {
   }
 }
 
-class ShowDialog extends StatefulWidget {
+class ShowDialogClass extends StatefulWidget {
   final product;
-  const ShowDialog({Key? key, required this.product}) : super(key: key);
+  const ShowDialogClass({Key? key, required this.product}) : super(key: key);
 
   @override
-  State<ShowDialog> createState() => _ShowDialogState();
+  State<ShowDialogClass> createState() => _ShowDialogClassState();
 }
 
-class _ShowDialogState extends State<ShowDialog> {
+class _ShowDialogClassState extends State<ShowDialogClass> {
   int quantity = 1;
   String validQuantity = '';
   @override

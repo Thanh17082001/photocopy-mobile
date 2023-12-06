@@ -10,21 +10,24 @@ class AccessoryModel {
   final int? rentalQuantity;
   final int? priceSale;
   final int? priceRental;
+  final int? priceImport;
   final String typeProduct;
 // hàm xây dưng
-  AccessoryModel(
-      {this.id,
-      this.name,
-      this.description,
-      this.image,
-      this.soldQuantity,
-      this.inputQuantity,
-      this.rentalQuantity,
-      this.priceSale,
-      this.priceRental,
-      this.brandId,
-      this.typeId,
-      this.typeProduct = 'accessory',});
+  AccessoryModel({
+    this.id,
+    this.name,
+    this.description,
+    this.image,
+    this.soldQuantity,
+    this.inputQuantity,
+    this.rentalQuantity,
+    this.priceSale,
+    this.priceRental,
+    this.priceImport,
+    this.brandId,
+    this.typeId,
+    this.typeProduct = 'accessory',
+  });
 
   AccessoryModel copyWith(
       {String? id,
@@ -50,26 +53,25 @@ class AccessoryModel {
         soldQuantity: soldQuantity ?? this.soldQuantity,
         rentalQuantity: rentalQuantity ?? this.rentalQuantity,
         image: image ?? this.image,
-        typeProduct: typeProduct ?? 'accessory'
-        );
+        typeProduct: typeProduct ?? 'accessory');
   }
 
   // chuyển từ json sang ob dart
   static AccessoryModel fromJson(Map<String, dynamic> json) {
     return AccessoryModel(
-      id: json['_id'],
-      brandId: json['brandId'],
-      typeId: json['typeId'],
-      name: json['name'],
-      description: json['description'],
-      priceSale: json['priceSale'],
-      priceRental: json['priceRental'],
-      soldQuantity: json['soldQuantity'],
-      inputQuantity: json['inputQuantity'],
-      rentalQuantity: json['rentalQuantity'],
-      image: json['image'],
-      typeProduct:'accessory'
-    );
+        id: json['_id'],
+        brandId: json['brandId'],
+        typeId: json['typeId'],
+        name: json['name'],
+        description: json['description'],
+        priceSale: json['priceSale'],
+        priceRental: json['priceRental'],
+        priceImport: json['priceImport'],
+        soldQuantity: json['soldQuantity'],
+        inputQuantity: json['inputQuantity'],
+        rentalQuantity: json['rentalQuantity'],
+        image: json['image'],
+        typeProduct: 'accessory');
   }
 
   Map<String, dynamic> toJson() {

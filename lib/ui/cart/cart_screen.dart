@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:photocopy/ui/cart/cart_item.dart';
+import 'package:photocopy/ui/order/order_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'cart_manager.dart';
@@ -20,8 +21,9 @@ class _CartScreenState extends State<CartScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Giỏ hàng'),
+         backgroundColor: const Color(0xFF0E8388),
       ),
-      body: Column(children: [Expanded(child: itemsCart(carts))]),
+      body: Column(children: [Expanded(child: itemsCart())]),
       bottomNavigationBar: Container(
         padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
         decoration: const BoxDecoration(
@@ -36,40 +38,45 @@ class _CartScreenState extends State<CartScreen> {
               return Text(
                   'Tổng giá: ${curency(context.read<CartManager>().totalProduct())}');
             }),
-            ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(0)),
-                    elevation: 3.0,
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 20, horizontal: 40)),
-                // ignore: unnecessary_null_comparison
-                onPressed: (carts != null && carts.isNotEmpty)
-                    ? () {
-                        print('123');
-                      }
-                    : null,
-                child: const Text('Mua hàng'))
+            Consumer<CartManager>(builder: (context, cartManager, index) {
+              return ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(0)),
+                      elevation: 3.0,
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 20, horizontal: 40)),
+                  // ignore: unnecessary_null_comparison
+                  onPressed: (cartManager.productCount > 0)
+                      ? () {
+                          Navigator.of(context)
+                              .pushNamed(OrderScreen.routerName,arguments: {'products': carts, 'total': cartManager.totalProduct()});
+                        }
+                      : null,
+                  child: const Text('Mua hàng'));
+            })
           ],
         ),
       ),
     );
   }
 
-  Widget itemsCart(carts) {
-      return Consumer<CartManager>(builder: (context, cartManager, index) {
-        if (cartManager.productCount > 0) {
-          return ListView.builder(
-            itemCount: cartManager.productCount,
-            itemBuilder: (context, index) {
-              return CartItem(productInCart: cartManager.products[index]);
-            },
-          );
-        } else {
-          return const Center(child: Text('Chưa có sản phẩm trong giỏ hàng'),);
-        }
-      });
+  Widget itemsCart() {
+    return Consumer<CartManager>(builder: (context, cartManager, index) {
+      if (cartManager.productCount > 0) {
+        return ListView.builder(
+          itemCount: cartManager.productCount,
+          itemBuilder: (context, index) {
+            return CartItem(productInCart: cartManager.products[index]);
+          },
+        );
+      } else {
+        return const Center(
+          child: Text('Chưa có sản phẩm trong giỏ hàng'),
+        );
+      }
+    });
   }
 
   String curency(price) {
