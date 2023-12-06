@@ -1,17 +1,18 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:photocopy/model/product_model.dart';
 import '../../service/product_service.dart';
 
 class ProductManager with ChangeNotifier {
   final ProductService productService = ProductService();
-  List<ProductModel> _items = [] ;
+  List<ProductModel> _items = [];
 
   List<ProductModel> get products {
     return [..._items];
   }
 
   Future fetchproducts() async {
-    _items  = (await productService.getAll())!;
+    _items = (await productService.getAll())!;
     notifyListeners();
   }
 
@@ -28,11 +29,12 @@ class ProductManager with ChangeNotifier {
     return _items.length;
   }
 
-  ProductModel? findById(String id) {
-    try {
+  ProductModel findById(String id) {
+    fetchproducts();
+    if (_items.isNotEmpty) {
       return _items.firstWhere((product) => product.id == id);
-    } catch (err) {
-      return null;
+    } else {
+      return ProductModel();
     }
   }
 

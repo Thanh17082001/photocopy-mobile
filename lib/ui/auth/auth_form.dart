@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:photocopy/ui/auth/auth_manager.dart';
 import 'package:provider/provider.dart';
 
+import '../cart/cart_manager.dart';
 import '../shared/dialog_utils.dart';
 
 enum AuthMode { signup, login }
@@ -60,7 +61,7 @@ class _AuthFormState extends State<AuthForm> {
         } else {
           setState(() {
             isLogin.value = false;
-            mes = 'Đăng nhập không thành công';
+            mes = 'tài khoản hoặc mật khẩu không chính xác';
             _passwordController.text = '';
           });
         }

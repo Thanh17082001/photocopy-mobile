@@ -51,4 +51,27 @@ class CartService {
       return null;
     }
   }
+
+  Future<bool> updateQuantity(userId, products) async {
+    try {
+      final headers = {'Content-Type': 'application/json'};
+      final url = Uri.parse("http://10.0.2.2:3000/cart/update/?userId=$userId");
+      final response = await http.post(url,
+          headers: headers, body: json.encode({'products': products}));
+      final result = json.decode(response.body);
+      if (response.statusCode != 200) {
+        return false;
+      } else {
+        print(result['status']);
+        if (result['status']) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
 }

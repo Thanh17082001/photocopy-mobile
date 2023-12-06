@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:photocopy/ui/auth/auth_manager.dart';
 import 'package:photocopy/ui/cart/cart_manager.dart';
+import 'package:photocopy/ui/cart/cart_screen.dart';
 import 'package:photocopy/ui/product/accessory_manager.dart';
 import 'package:photocopy/ui/product/brand_manager.dart';
 import 'package:photocopy/ui/product/product_manager.dart';
@@ -31,7 +32,10 @@ class MyApp extends StatelessWidget {
             primarySwatch: Colors.blue,
           ),
           home: authMangager.isLogin ? const ScreenApp() : const AuthScreen(),
-          routes: {AuthScreen.routerName: (context) => const AuthScreen()},
+          routes: {
+            AuthScreen.routerName: (context) => const AuthScreen(),
+            CartScreen.routerName: (context) => const CartScreen(),
+          },
         );
       }),
     );

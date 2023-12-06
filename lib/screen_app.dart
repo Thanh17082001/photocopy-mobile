@@ -1,9 +1,14 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:photocopy/ui/auth/auth_manager.dart';
 import 'package:photocopy/ui/auth/auth_screen.dart';
 import 'package:photocopy/ui/cart/cart_manager.dart';
+import 'package:photocopy/ui/cart/cart_screen.dart';
+import 'package:photocopy/ui/product/accessory_manager.dart';
+import 'package:photocopy/ui/product/product_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import './model/auth_model.dart';
@@ -57,7 +62,13 @@ class _ScreenAppState extends State<ScreenApp> {
             }
           },
         ),
-        actions: [cartButton(),const SizedBox(width: 8,), logout()],
+        actions: [
+          cartButton(),
+          const SizedBox(
+            width: 8,
+          ),
+          logout()
+        ],
       ),
       bottomNavigationBar: navBotomBar(),
       body: pages[selectedIndex],
@@ -102,7 +113,9 @@ class _ScreenAppState extends State<ScreenApp> {
 
   Widget logout() {
     return IconButton(
-        onPressed: () {
+        onPressed: () async {
+          final prefs = await SharedPreferences.getInstance();
+          prefs.remove('user');
           // Navigator.of(context).pushNamedAndRemoveUntil(
           //   AuthScreen.routerName,
           //   (route) => false,
@@ -127,12 +140,32 @@ class _ScreenAppState extends State<ScreenApp> {
     );
   }
 
+  Future<void> getCart() async {
+    await context.read<CartManager>().getCartByUserId();
+  }
+
+  Future<void> products() async {
+    await context.read<ProductManager>().fetchproducts();
+  }
+
   Widget cartButton() {
-    context.read<CartManager>().getCartByUserId();
+    getCart();
     return Consumer<CartManager>(builder: (context, cartManager, index) {
       return CartIcon(
         count: cartManager.productCount,
-        child: const Icon(Icons.shopping_cart, size: 35,),
+        child: GestureDetector(
+          child: const Icon(
+            Icons.shopping_cart,
+            size: 35,
+          ),
+          onTap: () async {
+            await getCart();
+            await context.read<ProductManager>().fetchproducts();
+            await context.read<AccessoryManager>().fetchproducts();
+            context.read<CartManager>().totalProduct();
+            Navigator.of(context).pushNamed(CartScreen.routerName);
+          },
+        ),
       );
     });
   }

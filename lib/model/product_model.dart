@@ -2,7 +2,7 @@ class ProductModel {
   final String? id;
   final String? brandId;
   final String? typeId;
-  final String categoryId;
+  final String? categoryId;
   final String? name;
   final String? description;
   final String? image;
@@ -28,7 +28,7 @@ class ProductModel {
     this.brandId,
     this.typeId,
     this.typeProduct='product',
-    required this.categoryId,
+    this.categoryId,
   });
 
   ProductModel copyWith({
