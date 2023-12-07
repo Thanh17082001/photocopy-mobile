@@ -19,11 +19,13 @@ class BrandManager with ChangeNotifier {
     return _items.length;
   }
 
-  BrandModel? findById(String id) {
+  BrandModel findById(String id) {
     try {
-      return _items.firstWhere((product) => product.id == id);
+      fetchBrands();
+      print(id);
+      return _items.firstWhere((brand) => brand.id == id);
     } catch (err) {
-      return null;
+      return BrandModel();
     }
   }
 }

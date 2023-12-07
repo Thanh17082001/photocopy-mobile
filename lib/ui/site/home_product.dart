@@ -258,6 +258,7 @@ class _HomeProductState extends State<HomeProduct> {
 }
 
 class ShowDialogClass extends StatefulWidget {
+  // ignore: prefer_typing_uninitialized_variables
   final product;
   const ShowDialogClass({Key? key, required this.product}) : super(key: key);
 

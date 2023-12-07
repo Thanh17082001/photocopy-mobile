@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:photocopy/ui/cart/cart_item.dart';
 import 'package:photocopy/ui/order/order_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../model/auth_model.dart';
 import 'cart_manager.dart';
 
 class CartScreen extends StatefulWidget {
@@ -21,7 +25,7 @@ class _CartScreenState extends State<CartScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Giỏ hàng'),
-         backgroundColor: const Color(0xFF0E8388),
+        backgroundColor: const Color(0xFF0E8388),
       ),
       body: Column(children: [Expanded(child: itemsCart())]),
       bottomNavigationBar: Container(
@@ -49,9 +53,13 @@ class _CartScreenState extends State<CartScreen> {
                           vertical: 20, horizontal: 40)),
                   // ignore: unnecessary_null_comparison
                   onPressed: (cartManager.productCount > 0)
-                      ? () {
-                          Navigator.of(context)
-                              .pushNamed(OrderScreen.routerName,arguments: {'products': carts, 'total': cartManager.totalProduct()});
+                      ? () async {
+                          // ignore: use_build_context_synchronously
+                          await Navigator.of(context)
+                              .pushNamed(OrderScreen.routerName, arguments: {
+                            'products': carts,
+                            'total': cartManager.totalProduct(),
+                          });
                         }
                       : null,
                   child: const Text('Mua hàng'));

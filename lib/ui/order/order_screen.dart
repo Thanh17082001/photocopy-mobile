@@ -1,10 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:photocopy/ui/cart/cart_screen.dart';
 import 'package:photocopy/ui/order/order_manager.dart';
 import 'package:photocopy/ui/site/home_product.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../model/auth_model.dart';
 import '../order/cart_item.dart';
 import '../cart/cart_manager.dart';
 
@@ -22,18 +26,40 @@ class OrderScreen extends StatefulWidget {
 
 class _OrderScreenState extends State<OrderScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey();
+
   final _isSubmitting = ValueNotifier<bool>(false);
-  final Map<String, String> _customer = {
+
+  Map<String, String> _customer = {
     'email': '',
     'address': '',
     'phone': '',
-    'fullName': ''
+    'fullName': '',
   };
+  
+
+  Future<void> _initializeData() async {
+    final prefs = await SharedPreferences.getInstance();
+    var initUser = prefs.getString('user');
+    AuthModel? user = AuthModel.fromJson(jsonDecode(initUser!));
+    // ignore: unnecessary_null_comparison
+    if (user != null) {
+      _customer = {
+        'email': user.email != null ? user.email.toString() : '',
+        'address': '',
+        'phone': user.phoneNumber != null
+            ? user.phoneNumber.toString()
+            : '',
+        'fullName':
+            user.fullName != null ? user.fullName.toString() : '',
+      };
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final total = context.read<CartManager>().totalProduct();
     final count = context.read<CartManager>().productCount;
+    // ignore: unnecessary_null_comparison
     return Scaffold(
       appBar: AppBar(
         title: const Text('Đặt hàng'),
@@ -81,7 +107,22 @@ class _OrderScreenState extends State<OrderScreen> {
               style: TextStyle(fontSize: 20),
             ),
           ),
-          formOrder()
+          FutureBuilder(
+            future: _initializeData() ,
+            builder: (context, snapsort) {
+               if (snapsort.connectionState == ConnectionState.waiting) {
+            // Nếu Future đang chờ, hiển thị một tiến trình đợi
+            return CircularProgressIndicator();
+          } else if (snapsort.hasError) {
+            // Nếu có lỗi, xử lý lỗi tùy thuộc vào yêu cầu của ứng dụng
+            return Text('Error: ${snapsort.error}');
+          }
+          else{
+              return formOrder();
+
+          } 
+            }
+          )
         ],
       ),
       bottomNavigationBar: Container(
@@ -215,6 +256,7 @@ class _OrderScreenState extends State<OrderScreen> {
 
   Widget _fullNameField() {
     return TextFormField(
+      initialValue: _customer['fullName'],
       decoration: InputDecoration(
           enabledBorder: OutlineInputBorder(
               borderSide: const BorderSide(color: Colors.white),
@@ -240,6 +282,7 @@ class _OrderScreenState extends State<OrderScreen> {
 
   Widget _phoneField() {
     return TextFormField(
+      initialValue: _customer['phone'],
       decoration: InputDecoration(
           enabledBorder: OutlineInputBorder(
               borderSide: const BorderSide(color: Colors.white),
@@ -265,6 +308,7 @@ class _OrderScreenState extends State<OrderScreen> {
 
   Widget _emailField() {
     return TextFormField(
+      initialValue: _customer['email'],
       decoration: InputDecoration(
           enabledBorder: OutlineInputBorder(
               borderSide: const BorderSide(color: Colors.white),
