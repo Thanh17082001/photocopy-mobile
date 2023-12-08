@@ -64,8 +64,9 @@ class ProductService {
         return [];
       } else {
         result.forEach((product) {
-          products.add(ProductModel.fromJson(product));
-          if (product['inputQuantity'] > 0) {}
+          if (product['inputQuantity'] > 0) {
+            products.add(ProductModel.fromJson(product));
+          }
         });
       }
       return products;
