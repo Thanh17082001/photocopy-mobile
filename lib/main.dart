@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:photocopy/model/accessory_model.dart';
+import 'package:photocopy/model/order_model.dart';
 import 'package:photocopy/model/product_model.dart';
 import 'package:photocopy/ui/auth/auth_manager.dart';
 import 'package:photocopy/ui/cart/cart_manager.dart';
 import 'package:photocopy/ui/cart/cart_screen.dart';
+import 'package:photocopy/ui/order/order_detail.dart';
 import 'package:photocopy/ui/order/order_manager.dart';
 import 'package:photocopy/ui/product/accessory_manager.dart';
 import 'package:photocopy/ui/product/brand_manager.dart';
@@ -50,16 +52,25 @@ class MyApp extends StatelessWidget {
                 var arguments = settings.arguments as Map<String, dynamic>;
                 if (arguments['typeProduct'] == 'product') {
                   return MaterialPageRoute(builder: (ctx) {
-                  ProductModel product = ctx.read<ProductManager>().findById(arguments['id']);
-                    return  ProductDetai(product);
+                    ProductModel product =
+                        ctx.read<ProductManager>().findById(arguments['id']);
+                    return ProductDetai(product);
                   });
-                }
-                else{
+                } else {
                   return MaterialPageRoute(builder: (ctx) {
-                   AccessoryModel product =ctx.read<AccessoryManager>().findById(arguments['id']);
-                    return  ProductDetai(product);
+                    AccessoryModel product =
+                        ctx.read<AccessoryManager>().findById(arguments['id']);
+                    return ProductDetai(product);
                   });
                 }
+              }
+            } else if (settings.name == OrderDetail.routerName) {
+              if (settings.arguments != null) {
+                var id = settings.arguments as String;
+                return MaterialPageRoute(builder: (ctx) {
+                  OrderModel order = ctx.read<OrderManager>().findById(id);
+                  return OrderDetail(order);
+                });
               }
             }
           }),

@@ -7,6 +7,7 @@ import 'package:photocopy/ui/auth/auth_manager.dart';
 import 'package:photocopy/ui/auth/auth_screen.dart';
 import 'package:photocopy/ui/cart/cart_manager.dart';
 import 'package:photocopy/ui/cart/cart_screen.dart';
+import 'package:photocopy/ui/order/order_history.dart';
 import 'package:photocopy/ui/product/accessory_manager.dart';
 import 'package:photocopy/ui/product/product_manager.dart';
 import 'package:provider/provider.dart';
@@ -28,7 +29,7 @@ class _ScreenAppState extends State<ScreenApp> {
   bool? isLogin;
   // ignore: prefer_typing_uninitialized_variables
   AuthModel? user;
-  List<Widget> pages = [const HomeScreen()];
+  List<Widget> pages = [const HomeScreen(), const OrderHistory()];
 
   Future<AuthModel?> getUser() async {
     final prefs = await SharedPreferences.getInstance();

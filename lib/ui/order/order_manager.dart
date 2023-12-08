@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:photocopy/model/order_model.dart';
 import 'package:photocopy/service/order_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -14,8 +15,11 @@ class OrderManager with ChangeNotifier {
   OrderService orderService = OrderService();
   final ProductManager productManager = ProductManager();
   final AccessoryManager accessoryManager = AccessoryManager();
+  List<OrderModel> _items = [];
+
   Future<bool> addOrder(data, customer, total) async {
     await productManager.fetchproducts();
+    await accessoryManager.fetchproducts();
     data['products'].forEach((item) async {
       item['productId'] = item['id'];
       item['quantity'] = item['quantityCart'];
@@ -43,5 +47,27 @@ class OrderManager with ChangeNotifier {
     return res;
   }
 
- 
+  List<OrderModel> get orders {
+    return [..._items];
+  }
+
+  int get orderCount {
+    return _items.length;
+  }
+
+  Future<void> getByUserId() async {
+    final prefs = await SharedPreferences.getInstance();
+    var initUser = prefs.getString('user');
+    var user = AuthModel.fromJson(jsonDecode(initUser!));
+    _items = (await orderService.getByUserId(user.id.toString()))!;
+    notifyListeners();
+  }
+  OrderModel findById(String id) {
+    getByUserId();
+    if (_items.isNotEmpty) {
+      return _items.firstWhere((product) => product.id == id);
+    } else {
+      return OrderModel();
+    }
+  }
 }
